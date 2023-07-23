@@ -57,7 +57,7 @@ function startTimer() {
 
     timerInput.value = '';
     timerInput.disabled = true;
-    timerButton.textContent = "Stop";
+    timerButton.textContent = "Стоп";
 
     end = Date.now() + timeInSeconds * 1000;
     isTimerRunning = true;
