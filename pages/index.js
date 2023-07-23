@@ -1,9 +1,11 @@
 const timerInput = document.querySelector(".timer__input");
+const timerButton = document.querySelector(".timer__button");
 const timerCounter = document.querySelector('.timer__counter');
 
 let timeInSeconds;
 let end;
 let animationFrameId;
+let isTimerRunning = false;
 
 function timer() {
     const currentTime = Date.now();
@@ -11,7 +13,7 @@ function timer() {
 
     if (remaining <= 0) {
         timerCounter.textContent = "00:00:00";
-        cancelAnimationFrame(animationFrameId);
+        stopTimer();
         return;
     }
 
@@ -25,9 +27,27 @@ function timer() {
     animationFrameId = requestAnimationFrame(timer);
 }
 
+function stopTimer() {
+    cancelAnimationFrame(animationFrameId);
+    timerInput.disabled = false;
+    timerButton.textContent = "Старт";
+    isTimerRunning = false;
+}
+
 function startTimer() {
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
+    if (isTimerRunning) {
+        stopTimer();
+        return;
+    }
+
+    if (timerInput.value === '') {
+        if (end) {
+            timerInput.disabled = true;
+            timerButton.textContent = "Стоп";
+            isTimerRunning = true;
+            timer();
+        }
+        return;
     }
 
     timeInSeconds = parseInt(timerInput.value, 10);
@@ -36,8 +56,12 @@ function startTimer() {
     }
 
     timerInput.value = '';
+    timerInput.disabled = true;
+    timerButton.textContent = "Stop";
+
     end = Date.now() + timeInSeconds * 1000;
+    isTimerRunning = true;
     timer();
 }
 
-document.querySelector(".timer__button").addEventListener("click", startTimer);
+timerButton.addEventListener("click", startTimer);
